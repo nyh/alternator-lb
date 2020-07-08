@@ -26,6 +26,8 @@ import software.amazon.awssdk.http.AbortableInputStream;
 import java.io.IOException;
 import java.util.Scanner;
 import java.util.Arrays;
+import software.amazon.awssdk.utils.AttributeMap;
+import software.amazon.awssdk.http.SdkHttpConfigurationOption;
 
 class AlternatorHttpClient implements SdkHttpClient {
     class UpdateThread extends Thread {
@@ -50,23 +52,20 @@ class AlternatorHttpClient implements SdkHttpClient {
     public static String LOCALNODES = "/localnodes";
     private SdkHttpClient base;
     private int port;
-    private String protocol = "http";
+    private String protocol;
     private volatile int hostIdx = 0;
     private volatile List<String> hosts;
     private volatile boolean closed = false;
     UpdateThread updateThread;
 
-    public AlternatorHttpClient(SdkHttpClient base, String host, int port) {
+    public AlternatorHttpClient(SdkHttpClient base, String protocol, String host, int port) {
         this.base = base;
+        this.protocol = protocol;
+        this.hosts = Arrays.asList(host);
         this.port = port;
-        hosts = Arrays.asList(host);
         updateHosts();
         updateThread = new UpdateThread(this);
         updateThread.start();
-    }
-
-    public void setProtocol(String protocol) {
-        this.protocol = protocol;
     }
 
     public boolean isClosed() {
@@ -142,10 +141,11 @@ class AlternatorHttpClient implements SdkHttpClient {
 }
 
 class AlternatorClient {
-    static DynamoDbClientBuilder builder(String host, int port) {
+    static DynamoDbClientBuilder builder(String protocol, String host, int port) {
+        AttributeMap defaults = AttributeMap.builder().put(SdkHttpConfigurationOption.TRUST_ALL_CERTIFICATES, true).build();
         return DynamoDbClient.builder()
             .endpointOverride(URI.create("https://" + AlternatorHttpClient.FAKE_HOST))
-            .httpClient(new AlternatorHttpClient(AlternatorApacheClient.builder().build(), host, port));
+            .httpClient(new AlternatorHttpClient(AlternatorApacheClient.builder().buildWithDefaults(defaults), protocol, host, port));
     }
 }
 

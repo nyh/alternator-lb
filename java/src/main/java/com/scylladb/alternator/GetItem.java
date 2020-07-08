@@ -65,7 +65,7 @@ public class GetItem {
 
         // Create the DynamoDbClient object
         Region region = Region.US_WEST_2;
-        DynamoDbClient ddb = AlternatorClient.builder("localhost", 8000).region(region).build();
+        DynamoDbClient ddb = AlternatorClient.builder("http", "localhost", 8000).region(region).build();
 
         getDynamoDBItem(ddb, tableName, key, keyVal);
         getDynamoDBItem(ddb, tableName, key, keyVal);

@@ -66,7 +66,7 @@ public class CreateTable {
 
         // Create the DynamoDbClient object
         Region region = Region.US_EAST_1;
-        DynamoDbClient ddb = AlternatorClient.builder("localhost", 8000)
+        DynamoDbClient ddb = AlternatorClient.builder("http", "localhost", 8000)
                 .region(region)
                 .build();
 

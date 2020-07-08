@@ -75,7 +75,7 @@ public class PutItem {
 
         // Create the DynamoDbClient object
         Region region = Region.US_WEST_2;
-        DynamoDbClient ddb = AlternatorClient.builder("localhost", 8000).region(region).build();
+        DynamoDbClient ddb = AlternatorClient.builder("http", "localhost", 8000).region(region).build();
         putItemInTable(ddb, tableName, key, keyVal, albumTitle, albumTitleValue, awards, awardVal, songTitle, songTitleVal);
         System.out.println("Done!");
         ddb.close();
