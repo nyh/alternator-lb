@@ -46,7 +46,7 @@ class AlternatorHttpClient implements SdkHttpClient {
         }
     }
 
-    public static String FAKE_HOST = "https://dog.scylladb.com";
+    public static String FAKE_HOST = "dog.scylladb.com";
     public static String LOCALNODES = "/localnodes";
     private SdkHttpClient base;
     private int port;
@@ -117,17 +117,15 @@ class AlternatorHttpClient implements SdkHttpClient {
     @Override
     public ExecutableHttpRequest prepareRequest(HttpExecuteRequest request) {
         SdkHttpFullRequest orig_request = (SdkHttpFullRequest)request.httpRequest();
-        System.out.printf("Original request: %s\n", orig_request.getUri().toString());
         SdkHttpFullRequest.Builder builder = orig_request.toBuilder()
                 .protocol(protocol)
                 .host(nextHost())
-//              .putHeader("host", Arrays.asList(FAKE_HOST))
+                .putHeader("Host", Arrays.asList(FAKE_HOST))
                 .port(8000);
         HttpExecuteRequest intercepted_request = HttpExecuteRequest.builder()
                 .request(builder.build())
                 .contentStreamProvider(orig_request.contentStreamProvider().get())
                 .build();
-        System.out.printf("Intercepted request: %s\n", intercepted_request.httpRequest().getUri().toString());
         return base.prepareRequest(intercepted_request);
     }
 
@@ -146,8 +144,8 @@ class AlternatorHttpClient implements SdkHttpClient {
 class AlternatorClient {
     static DynamoDbClientBuilder builder(String host, int port) {
         return DynamoDbClient.builder()
-            .endpointOverride(URI.create(AlternatorHttpClient.FAKE_HOST))
-            .httpClient(new AlternatorHttpClient(ApacheHttpClient.builder().build(), host, port));
+            .endpointOverride(URI.create("https://" + AlternatorHttpClient.FAKE_HOST))
+            .httpClient(new AlternatorHttpClient(AlternatorApacheClient.builder().build(), host, port));
     }
 }
 
