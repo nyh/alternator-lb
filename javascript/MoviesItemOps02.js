@@ -24,38 +24,9 @@
  * specific language governing permissions and limitations under the License.
 */
 var AWS = require("aws-sdk");
-var http = require("http");
-var dns = require("dns");
+var alternator = require("./Alternator");
 
-const ALTERNATOR_FAKE_HOST = "dog.scylladb.com";
-
-// I know, global variables are bad.
-var hostIdx = 0;
-var hosts = ["127.0.0.1", "127.0.0.2", "127.0.0.3", "127.0.0.4", "127.0.0.5"];
-
-var agent = new http.Agent;
-
-var oldCreateConnection = agent.createConnection;
-agent.createConnection = function(options, callback = null) {
-    options.lookup = function(hostname, options = null, callback) {
-        if (hostname == ALTERNATOR_FAKE_HOST) {
-            var host = hosts[hostIdx];
-            hostIdx = (hostIdx + 1) % hosts.length;
-            console.log("Picked", host);
-            return dns.lookup(host, options, callback);
-        }
-        return dns.lookup(hostname, options, callback);
-    };
-    return oldCreateConnection(options, callback);
-};
-
-AWS.config.update({
-  region: "us-west-2",
-  endpoint: "http://" + ALTERNATOR_FAKE_HOST + ":8000",
-  httpOptions:{
-    agent: agent
-  }
-});
+alternator.init(AWS, "http", 8000, ["127.0.0.1"]);
 
 var docClient = new AWS.DynamoDB.DocumentClient();
 
@@ -86,4 +57,7 @@ docClient.get(params, function(err, data) {
         console.log("GetItem succeeded:", JSON.stringify(data, null, 2));
     }
 });
+
+alternator.done();
+
 // snippet-end:[dynamodb.JavaScript.CodeExample.MoviesItemOps02]
