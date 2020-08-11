@@ -3,6 +3,9 @@
 This repository contains a collection of source code and scripts that can
 be used to implement **load balancing** for a Scylla Alternator cluster.
 
+All code in this repository is open source, licensed under the
+[Apache License 2.0](LICENSE).
+
 ## Introduction
 
 [Scylla](https://github.com/scylladb/scylla) is an open-source distributed
@@ -13,7 +16,7 @@ compatible with DynamoDB's HTTP and JSON based API. Unmodified applications
 written with any of Amazon's [SDK libraries](https://aws.amazon.com/tools/)
 can connect to a Scylla Alternator cluster instead of to Amazon's DynamoDB.
 
-However, there is still one fundemental difference between how DynamoDB
+However, there is still one fundamental difference between how DynamoDB
 and a Scylla cluster appear to an application. The entire DynamoDB service
 is presented to the application as a **single endpoint**, for example
 `http://dynamodb.us-east-1.amazonaws.com`. But Scylla is not a single
