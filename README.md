@@ -23,17 +23,29 @@ single endpoint, this specific node will become a performance bottleneck
 as it gets more work than the other nodes. Moreover, this node will become
 a single point of failure - if it fails, the entire service is unavailable.
 
-So what we need now is a way for DynamoDB applications, which were written
-with just a single endpoint in mind, to send requests to all of Alternator's
-nodes - not just to one. The mechanism we are looking for should equally
-load all of Alternator's nodes (_load balancing_) and ensures the service
-continues normally even if some of these nodes go down (_high availability_).
+So what Alternator users need now is a way for a DynamoDB application, which
+was written with just a single endpoint in mind, to send requests to all of
+Alternator's nodes - not just to one. The mechanisms we are looking for should
+equally load all of Alternator's nodes (_load balancing_) and ensures the
+service continues normally even if some of these nodes go down (_high
+availability_).
 
-## Possible solutions
+The goal of this repository is to offer Alternator users with such
+load balancing mechanisms, in the form of code examples, libraries,
+and documentation.
+
+## This repository
 
 The most straightforward solution is to deploy a _load balancer_, a machine
 or a virtual service, which will sit in front of the Alternator cluster
 and forward the HTTP requests that it gets to the different Alternator nodes.
+This is a good option for some setups, but a costly one because all the
+request traffic needs to flow through the load balancer.
 
+In [this document](https://docs.google.com/document/d/1twgrs6IM1B10BswMBUNqm7bwu5HCm47LOYE-Hdhuu_8/) we surveyed additional **server-side** load balancing
+mechanisms besides the TCP or HTTP load balancer. These including DNS,
+virtual IP addresses, and coordinator-only nodes. In the [dns](dns)
+subdirectory in this repository we demonstrate a simple proof-of-concept
+of the DNS mechanism.
 
-https://docs.google.com/document/d/1twgrs6IM1B10BswMBUNqm7bwu5HCm47LOYE-Hdhuu_8/edit#
+But the 
