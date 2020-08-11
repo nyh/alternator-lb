@@ -63,15 +63,15 @@ additional server-side nodes or services.
 Of course, our goal is to require _as little as possible_ changes to the
 client. Ideally, all that would need to be changed in an application is to
 have it load an additional library, or initialize the existing library a bit
-differently; From there the usual, unmodified, AWS SDK functions will
-automatically use all of Alternator's nodes and not just one.
+differently; From there on, the usual unmodified AWS SDK functions will
+automatically use all of Alternator's nodes instead of just one.
 
 We currently provide libraries to do exactly that in four programming
 languages: [go](go), [java](java), [javascript](javascript) (node.js), and
 [python](python). Each of these directories includes a README file
-explaining how to use this in applications. These libraries are not
+explaining how to use this library in an application. These libraries are not
 complete DynamoDB drivers - the application continues to use Amazon's
-SDKs (e.g., boto3 in Python) - but our libraries automatically retrieve
-the list of nodes in an Alternator cluster, and configure or trick
-the Amazon SDK into sending requests to many different nodes, not just
-the same one.
+SDKs (e.g., boto3 in Python). Rather, what our libraries do is to
+automatically retrieve the list of nodes in an Alternator cluster, and
+configure or trick the Amazon SDK into sending requests to many different
+nodes instead of always to the same one.
