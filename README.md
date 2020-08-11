@@ -23,7 +23,8 @@ and a Scylla cluster appear to an application:
     `http://dynamodb.us-east-1.amazonaws.com`.
   * Scylla is not a single endpoint - it is a _distributed_ database - a
     cluster of **many nodes**.
-If we configure the application to use just one of these nodes as the
+
+If we configure the application to use just one of the Scylla nodes as the
 single endpoint, this specific node will become a performance bottleneck
 as it gets more work than the other nodes. Moreover, this node will become
 a single point of failure - if it fails, the entire service is unavailable.
