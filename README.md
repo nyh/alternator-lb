@@ -8,8 +8,8 @@ All code in this repository is open source, licensed under the
 
 ## Introduction
 
-[Scylla](https://github.com/scylladb/scylla) is an open-source distributed
-database.  [Alternator](https://docs.scylladb.com/using-scylla/alternator/)
+**[Scylla](https://github.com/scylladb/scylla)** is an open-source distributed
+database.  **[Alternator](https://docs.scylladb.com/using-scylla/alternator/)**
 is a Scylla feature which adds Amazon DynamoDB&trade; compatibility to
 Scylla. With Alternator, Scylla is fully (or [almost fully](https://github.com/scylladb/scylla/blob/master/docs/alternator/alternator.md#current-compatibility-with-dynamodb))
 compatible with DynamoDB's HTTP and JSON based API. Unmodified applications
@@ -17,10 +17,12 @@ written with any of Amazon's [SDK libraries](https://aws.amazon.com/tools/)
 can connect to a Scylla Alternator cluster instead of to Amazon's DynamoDB.
 
 However, there is still one fundamental difference between how DynamoDB
-and a Scylla cluster appear to an application. The entire DynamoDB service
-is presented to the application as a **single endpoint**, for example
-`http://dynamodb.us-east-1.amazonaws.com`. But Scylla is not a single
-endpoint - it is a _distributed_ database - a cluster of **many nodes**.
+and a Scylla cluster appear to an application:
+  * The entire DynamoDB service is presented to the application as a
+    **single endpoint**, for example
+    `http://dynamodb.us-east-1.amazonaws.com`.
+  * Scylla is not a single endpoint - it is a _distributed_ database - a
+    cluster of **many nodes**.
 If we configure the application to use just one of these nodes as the
 single endpoint, this specific node will become a performance bottleneck
 as it gets more work than the other nodes. Moreover, this node will become
