@@ -29,10 +29,10 @@ single endpoint, this specific node will become a performance bottleneck
 as it gets more work than the other nodes. Moreover, this node will become
 a single point of failure - if it fails, the entire service is unavailable.
 
-So what Alternator users need now is a way for a DynamoDB application, which
-was written with just a single endpoint in mind, to send requests to all of
-Alternator's nodes - not just to one. The mechanisms we are looking for should
-equally load all of Alternator's nodes (_load balancing_) and ensures the
+So what Alternator users need now is a way for a DynamoDB application - which
+was written with just a single endpoint in mind - to send requests to all of
+Alternator's nodes, not just to one. The mechanisms we are looking for should
+equally load all of Alternator's nodes (_load balancing_) and ensure that the
 service continues normally even if some of these nodes go down (_high
 availability_).
 
@@ -42,9 +42,9 @@ and documentation.
 
 ## This repository
 
-The most obvious solution is to deploy a _load balancer_, a machine
-or a virtual service, which will sit in front of the Alternator cluster
-and forward the HTTP requests that it gets to the different Alternator nodes.
+The most obvious load-balancing solution is a _load balancer_, a machine
+or a virtual service which sits in front of the Alternator cluster and
+forwards the HTTP requests that it gets to the different Alternator nodes.
 This is a good option for some setups, but a costly one because all the
 request traffic needs to flow through the load balancer.
 
@@ -56,12 +56,15 @@ proof-of-concept of the DNS mechanism.
 
 But the bulk of this repository is devoted to **client-side** load balancing.
 In client-side load balancing, the client is modified to connect to all
-Alternator nodes instead of just ones. Of course our goal is to require
-_as little as possible_ changes to the client. Ideally, all that would need 
-to be changed in an application is to have it load an additional library,
-or initialize the existing library a bit differently; From there the usual,
-unmodified, AWS SDK functions will automatically use all of Alternator's
-nodes and not just one.
+Alternator nodes instead of just one. Client-side load balancing simplifies
+server deployment and lowers server costs - as we do not need to deploy
+additional server-side nodes or services.
+
+Of course, our goal is to require _as little as possible_ changes to the
+client. Ideally, all that would need to be changed in an application is to
+have it load an additional library, or initialize the existing library a bit
+differently; From there the usual, unmodified, AWS SDK functions will
+automatically use all of Alternator's nodes and not just one.
 
 We currently provide libraries to do exactly that in four programming
 languages: [go](go), [java](java), [javascript](javascript) (node.js), and
