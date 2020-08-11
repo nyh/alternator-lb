@@ -36,16 +36,33 @@ and documentation.
 
 ## This repository
 
-The most straightforward solution is to deploy a _load balancer_, a machine
+The most obvious solution is to deploy a _load balancer_, a machine
 or a virtual service, which will sit in front of the Alternator cluster
 and forward the HTTP requests that it gets to the different Alternator nodes.
 This is a good option for some setups, but a costly one because all the
 request traffic needs to flow through the load balancer.
 
-In [this document](https://docs.google.com/document/d/1twgrs6IM1B10BswMBUNqm7bwu5HCm47LOYE-Hdhuu_8/) we surveyed additional **server-side** load balancing
-mechanisms besides the TCP or HTTP load balancer. These including DNS,
-virtual IP addresses, and coordinator-only nodes. In the [dns](dns)
-subdirectory in this repository we demonstrate a simple proof-of-concept
-of the DNS mechanism.
+In [this document](https://docs.google.com/document/d/1twgrs6IM1B10BswMBUNqm7bwu5HCm47LOYE-Hdhuu_8/) we surveyed some additional **server-side**
+load-balancing mechanisms besides the TCP or HTTP load balancer.
+These including _DNS_, _virtual IP addresses_, and _coordinator-only nodes_.
+In the [dns](dns) subdirectory in this repository we demonstrate a simple
+proof-of-concept of the DNS mechanism.
 
-But the 
+But the bulk of this repository is devoted to **client-side** load balancing.
+In client-side load balancing, the client is modified to connect to all
+Alternator nodes instead of just ones. Of course our goal is to require
+_as little as possible_ changes to the client. Ideally, all that would need 
+to be changed in an application is to have it load an additional library,
+or initialize the existing library a bit differently; From there the usual,
+unmodified, AWS SDK functions will automatically use all of Alternator's
+nodes and not just one.
+
+We currently provide libraries to do exactly that in four programming
+languages: [go](go), [java](java), [javascript](javascript) (node.js), and
+[python](python). Each of these directories includes a README file
+explaining how to use this in applications. These libraries are not
+complete DynamoDB drivers - the application continues to use Amazon's
+SDKs (e.g., boto3 in Python) - but our libraries automatically retrieve
+the list of nodes in an Alternator cluster, and configure or trick
+the Amazon SDK into sending requests to many different nodes, not just
+the same one.
